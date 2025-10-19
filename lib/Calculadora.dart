@@ -21,6 +21,7 @@ class CalculadoraPage extends StatefulWidget {
 
 class _CalculadoraPageState extends State<CalculadoraPage> {
   int _counter = 0;
+  String _result = '';
 
   void _incrementCounter() {
     setState(() {
@@ -33,8 +34,27 @@ class _CalculadoraPageState extends State<CalculadoraPage> {
     });
   }
 
+  void _changeResult(dynamic n) {
+    setState(() {
+      // ignore: prefer_interpolation_to_compose_strings
+      _result = _result + '$n';
+    });
+  }
+
+  void _clearResult(){
+    setState(() {
+      _result = '';
+    });
+    
+  }
+
+  void _plus(){
+    
+  }
+
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -46,11 +66,11 @@ class _CalculadoraPageState extends State<CalculadoraPage> {
         child: Container(
           width: 400,
           decoration: BoxDecoration(
-            // estilo da "div"
-            color: Colors.blue[100], // cor de fundo
-            borderRadius: BorderRadius.circular(10), // borda arredondada
+            
+            color: Colors.blue[100], 
+            borderRadius: BorderRadius.circular(10), 
             border: Border.all(
-              // borda
+             
               color: Colors.blue,
               width: 2,
             ),
@@ -69,30 +89,58 @@ class _CalculadoraPageState extends State<CalculadoraPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               const Text('You have pushed the button this many times:'),
-              Text(
-                '$_counter',
-                style: Theme.of(context).textTheme.headlineMedium,
-              ),
+              Text(_result, style: Theme.of(context).textTheme.headlineMedium),
               Container(
                 padding: EdgeInsets.all(20),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     for (int i = 0; i < 3; i++)
-                      Row(
+                      Row(  
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          
-                          for (int i = 0; i < 3; i++)  
+                          for (int j = 0; j < 3; j++)
                             Padding(
                               padding: EdgeInsets.all(20),
                               child: FloatingActionButton(
-                                onPressed: null,
-                                tooltip: 'Increment',
-                                child: const Icon(Icons.numbers),
+                                onPressed: () => _changeResult(i * 3 + j),
+                                tooltip: '${i * 3 + j + 1}',
+                                child: Text('${i * 3 + j + 1}'),
                               ),
-                            ),
+                            ), 
+                                                       
                         ],
+                        
                       ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.all(20),
+                          child: FloatingActionButton(
+                            onPressed: _clearResult,
+                            tooltip: 'Limpar',
+                            child: Text('CE')
+                          ),
+                          ),
+                        Padding(
+                          padding: EdgeInsets.all(20),
+                          child: FloatingActionButton(
+                            onPressed: ()=> _changeResult(0),
+                            tooltip: '0',
+                            child: Text('0')
+                          )
+                        ),
+                        Padding(
+                          padding: EdgeInsets.all(20),
+                          child: FloatingActionButton(
+                            onPressed: ()=> _plus(),
+                            tooltip: 'Soma',
+                            child: const Icon(Icons.add),
+                          )
+                        )
+                      ]
+                    ),
                   ],
                 ),
               ),
