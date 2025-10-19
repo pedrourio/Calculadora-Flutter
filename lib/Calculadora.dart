@@ -20,19 +20,9 @@ class CalculadoraPage extends StatefulWidget {
 }
 
 class _CalculadoraPageState extends State<CalculadoraPage> {
-  int _counter = 0;
   String _result = '';
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
+  int _value = 0;
+  String _selected_operation = '';
 
   void _changeResult(dynamic n) {
     setState(() {
@@ -44,13 +34,59 @@ class _CalculadoraPageState extends State<CalculadoraPage> {
   void _clearResult(){
     setState(() {
       _result = '';
+      _value = 0;
+      _selected_operation = '';
     });
     
   }
 
   void _plus(){
-    
+    int result_num = int.tryParse(_result) ?? 0;
+    setState((){
+      _value =  _value + result_num;
+      _result='+';
+
+      _selected_operation = 'plus';
+    });
   }
+
+  void _minus(){
+    int result_num = int.tryParse(_result) ?? 0;
+    setState((){
+      _value = (result_num - _value)* -1;
+      _result='-';
+
+      _selected_operation = 'minus';
+    });
+  }
+
+  void _calculateOperation(){
+    switch (_selected_operation) {
+        case 'plus':
+            _plus();
+            setState(() {
+              _result = '$_value';
+              _selected_operation = '';
+              _value = 0;
+            });
+          break;
+          case 'minus':
+            _minus();
+            setState(() {
+              _result = '$_value';
+              _selected_operation = '';
+              _value = 0;
+            });
+          break;
+        default:
+          setState(() {
+              _result = 'Você ainda não inseriu nenhum valor!';
+              
+            });
+      }    
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -103,7 +139,7 @@ class _CalculadoraPageState extends State<CalculadoraPage> {
                             Padding(
                               padding: EdgeInsets.all(20),
                               child: FloatingActionButton(
-                                onPressed: () => _changeResult(i * 3 + j),
+                                onPressed: () => _changeResult(i * 3 + j + 1),
                                 tooltip: '${i * 3 + j + 1}',
                                 child: Text('${i * 3 + j + 1}'),
                               ),
@@ -118,27 +154,48 @@ class _CalculadoraPageState extends State<CalculadoraPage> {
                         Padding(
                           padding: EdgeInsets.all(20),
                           child: FloatingActionButton(
-                            onPressed: _clearResult,
-                            tooltip: 'Limpar',
-                            child: Text('CE')
+                            onPressed: _minus,
+                            tooltip: 'Subtrair',
+                            child: const Icon(Icons.horizontal_rule),
                           ),
-                          ),
+                        ),
                         Padding(
                           padding: EdgeInsets.all(20),
                           child: FloatingActionButton(
                             onPressed: ()=> _changeResult(0),
                             tooltip: '0',
                             child: Text('0')
-                          )
+                          ),
                         ),
                         Padding(
                           padding: EdgeInsets.all(20),
                           child: FloatingActionButton(
                             onPressed: ()=> _plus(),
-                            tooltip: 'Soma',
+                            tooltip: 'Somar',
                             child: const Icon(Icons.add),
-                          )
-                        )
+                          ),
+                        ),
+                      ]
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.all(20),
+                          child: FloatingActionButton(
+                            onPressed: _calculateOperation,
+                            tooltip: 'Igual',
+                            child: const Icon(Icons.equalizer),
+                          ),
+                          ),
+                        Padding(
+                          padding: EdgeInsets.all(20),
+                          child: FloatingActionButton(
+                            onPressed: _clearResult,
+                            tooltip: 'Limpar',
+                            child: Text('CE'),
+                          ),
+                        ),
                       ]
                     ),
                   ],
@@ -148,12 +205,6 @@ class _CalculadoraPageState extends State<CalculadoraPage> {
           ),
         ),
       ),
-
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
