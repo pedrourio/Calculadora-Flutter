@@ -79,10 +79,7 @@ class _CalculadoraPageState extends State<CalculadoraPage> {
             });
           break;
         default:
-          setState(() {
-              _result = 'Você ainda não inseriu nenhum valor!';
-              
-            });
+          
       }    
   }
 
