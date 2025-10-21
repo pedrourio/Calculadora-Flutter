@@ -88,7 +88,6 @@ class _CalculadoraPageState extends State<CalculadoraPage> {
 
           child: SingleChildScrollView(
             scrollDirection: Axis.vertical,
-            scroll
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
