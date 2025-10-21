@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'main.dart';
+import 'calculo.dart';
 
 class CalculadoraPage extends StatefulWidget {
   const CalculadoraPage({super.key, required this.title});
@@ -20,70 +21,37 @@ class CalculadoraPage extends StatefulWidget {
 }
 
 class _CalculadoraPageState extends State<CalculadoraPage> {
-  String _result = '';
-  int _value = 0;
-  String _selected_operation = '';
+  final Calculo _calculator = Calculo();
 
-  void _changeResult(dynamic n) {
-    setState(() {
-      // ignore: prefer_interpolation_to_compose_strings
-      _result = _result + '$n';
-    });
-  }
-
-  void _clearResult(){
-    setState(() {
-      _result = '';
-      _value = 0;
-      _selected_operation = '';
-    });
-    
-  }
-
-  void _plus(){
-    int result_num = int.tryParse(_result) ?? 0;
+  void _handleNumberPress(int number){
     setState((){
-      _value =  _value + result_num;
-      _result='+';
-
-      _selected_operation = 'plus';
+      _calculator.changeResult(number);
     });
   }
 
-  void _minus(){
-    int result_num = int.tryParse(_result) ?? 0;
-    setState((){
-      _value = (result_num - _value)* -1;
-      _result='-';
-
-      _selected_operation = 'minus';
+  void _handleMinus(){
+    setState(() {
+      _calculator.minus();
     });
   }
 
-  void _calculateOperation(){
-    switch (_selected_operation) {
-        case 'plus':
-            _plus();
-            setState(() {
-              _result = '$_value';
-              _selected_operation = '';
-              _value = 0;
-            });
-          break;
-          case 'minus':
-            _minus();
-            setState(() {
-              _result = '$_value';
-              _selected_operation = '';
-              _value = 0;
-            });
-          break;
-        default:
-          
-      }    
+  void _handlePlus(){
+    setState(() {
+      _calculator.plus();
+    });
   }
 
+  void _handleEquals(){
+    setState(() {
+      _calculator.calculateOperation();
+    });
+  }
 
+  void _handleClear(){
+    setState(() {
+      _calculator.clearResult();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -122,7 +90,7 @@ class _CalculadoraPageState extends State<CalculadoraPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               const Text('You have pushed the button this many times:'),
-              Text(_result, style: Theme.of(context).textTheme.headlineMedium),
+              Text(_calculator.result, style: Theme.of(context).textTheme.headlineMedium),
               Container(
                 padding: EdgeInsets.all(20),
                 child: Column(
@@ -136,7 +104,7 @@ class _CalculadoraPageState extends State<CalculadoraPage> {
                             Padding(
                               padding: EdgeInsets.all(20),
                               child: FloatingActionButton(
-                                onPressed: () => _changeResult(i * 3 + j + 1),
+                                onPressed: () => _handleNumberPress(i * 3 + j + 1),
                                 tooltip: '${i * 3 + j + 1}',
                                 child: Text('${i * 3 + j + 1}'),
                               ),
@@ -151,7 +119,7 @@ class _CalculadoraPageState extends State<CalculadoraPage> {
                         Padding(
                           padding: EdgeInsets.all(20),
                           child: FloatingActionButton(
-                            onPressed: _minus,
+                            onPressed: _handleMinus,
                             tooltip: 'Subtrair',
                             child: const Icon(Icons.horizontal_rule),
                           ),
@@ -159,7 +127,7 @@ class _CalculadoraPageState extends State<CalculadoraPage> {
                         Padding(
                           padding: EdgeInsets.all(20),
                           child: FloatingActionButton(
-                            onPressed: ()=> _changeResult(0),
+                            onPressed: ()=> _handleNumberPress(0),
                             tooltip: '0',
                             child: Text('0')
                           ),
@@ -167,7 +135,7 @@ class _CalculadoraPageState extends State<CalculadoraPage> {
                         Padding(
                           padding: EdgeInsets.all(20),
                           child: FloatingActionButton(
-                            onPressed: ()=> _plus(),
+                            onPressed: ()=> _handlePlus(),
                             tooltip: 'Somar',
                             child: const Icon(Icons.add),
                           ),
@@ -180,7 +148,7 @@ class _CalculadoraPageState extends State<CalculadoraPage> {
                         Padding(
                           padding: EdgeInsets.all(20),
                           child: FloatingActionButton(
-                            onPressed: _calculateOperation,
+                            onPressed: _handleEquals,
                             tooltip: 'Igual',
                             child: const Icon(Icons.equalizer),
                           ),
@@ -188,7 +156,7 @@ class _CalculadoraPageState extends State<CalculadoraPage> {
                         Padding(
                           padding: EdgeInsets.all(20),
                           child: FloatingActionButton(
-                            onPressed: _clearResult,
+                            onPressed: _handleClear,
                             tooltip: 'Limpar',
                             child: Text('CE'),
                           ),
