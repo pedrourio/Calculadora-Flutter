@@ -22,10 +22,12 @@ class CalculadoraPage extends StatefulWidget {
 
 class _CalculadoraPageState extends State<CalculadoraPage> {
   final Calculo _calculator = Calculo();
+  int _pressedButton = 0;
 
   void _handleNumberPress(int number){
     setState((){
       _calculator.changeResult(number);
+      
     });
   }
 
@@ -66,6 +68,7 @@ class _CalculadoraPageState extends State<CalculadoraPage> {
       body: Center(
         child: Container(
           width: 400,
+          margin: EdgeInsets.all(30),
           decoration: BoxDecoration(
             
             color: Colors.blue[100], 
@@ -92,9 +95,9 @@ class _CalculadoraPageState extends State<CalculadoraPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 const Text('You have pushed the button this many times:'),
-                SingleChildScrollView(
-                  
+                SingleChildScrollView(                 
                   scrollDirection: Axis.horizontal,
+                  
                   child: Text(_calculator.result, style: Theme.of(context).textTheme.headlineMedium),
                 ),
                 Container(
@@ -108,14 +111,53 @@ class _CalculadoraPageState extends State<CalculadoraPage> {
                         children: [
                           for (int j = 0; j < 3; j++)
                             Padding(
-                              padding: EdgeInsets.all(20),
-                              child: FloatingActionButton(
-                                onPressed: () => _handleNumberPress(i * 3 + j + 1),
-                                tooltip: '${i * 3 + j + 1}',
-                                child: Text('${i * 3 + j + 1}'),
+                              padding: const EdgeInsets.all(20),
+                              child: GestureDetector(
+                                onTapDown: (_) => setState(() {
+                                  _pressedButton = i * 3 + j + 1;
+                                }),
+                                onTapUp: (_) {
+                                  _handleNumberPress(i * 3 + j + 1);
+                                  Future.delayed(const Duration(milliseconds: 200), () { //TEMPO QUE FICA APERTADO
+                                    if (mounted) {
+                                      setState(() {
+                                        _pressedButton = -1;
+                                      });
+                                    }
+                                  });
+                                },
+                                
+                                onTapCancel: () {
+                                  setState(() {
+                                    _pressedButton = -1;
+                                  });
+                                },
+                                child: AnimatedContainer(
+                                  duration: const Duration(milliseconds: 150), //TEMPO QUE DEMORA PARA FAZER ANIMAÇÃO
+                                  width: 60,
+                                  height: 60,
+                                  decoration: BoxDecoration(
+                                    color: _pressedButton == i * 3 + j + 1
+                                        ? Colors.green[300]
+                                        : Colors.blue,
+                                    borderRadius: _pressedButton == i * 3 + j + 1
+                                        ? BorderRadius.circular(30) // Circular
+                                        : BorderRadius.circular(10), // Rounded square
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      '${i * 3 + j + 1}',
+                                      style: const TextStyle(
+                                        fontSize: 24,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ),
                               ),
-                            ), 
-                                                       
+                            ),
+                                                                                   
                         ],
                         
                       ),
@@ -156,7 +198,7 @@ class _CalculadoraPageState extends State<CalculadoraPage> {
                           child: FloatingActionButton(
                             onPressed: _handleEquals,
                             tooltip: 'Igual',
-                            child: const Icon(Icons.equalizer),
+                            child: Text('='),
                           ),
                           ),
                         Padding(
