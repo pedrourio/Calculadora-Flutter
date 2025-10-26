@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'main.dart';
 import 'calculo.dart';
@@ -66,6 +67,7 @@ class _CalculadoraPageState extends State<CalculadoraPage> {
       ),
 
       body: Center(
+        
         child: Container(
           width: 400,
           margin: EdgeInsets.all(30),
@@ -94,12 +96,20 @@ class _CalculadoraPageState extends State<CalculadoraPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                const Text('You have pushed the button this many times:'),
-                SingleChildScrollView(                 
-                  scrollDirection: Axis.horizontal,
+                Container(
+                  width: 300,
+                  height: 50,
+                  margin: EdgeInsets.fromLTRB(0, 20, 0, 10),
+                  decoration: BoxDecoration(
+                    color: Colors.pinkAccent,
+                  ),
                   
-                  child: Text(_calculator.result, style: Theme.of(context).textTheme.headlineMedium),
-                ),
+                  child: SingleChildScrollView(    
+                    dragStartBehavior: DragStartBehavior.down,
+                    
+                    child: Text(_calculator.result, style: Theme.of(context).textTheme.headlineMedium),
+                  ),
+                ),  
                 Container(
                   padding: EdgeInsets.all(20),
                   child: Column(
