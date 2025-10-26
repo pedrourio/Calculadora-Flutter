@@ -111,7 +111,7 @@ class _CalculadoraPageState extends State<CalculadoraPage> {
                         children: [
                           for (int j = 0; j < 3; j++)
                             Padding(
-                              padding: const EdgeInsets.all(20),
+                              padding: const EdgeInsets.all(10),
                               child: GestureDetector(
                                 onTapDown: (_) => setState(() {
                                   _pressedButton = i * 3 + j + 1;
@@ -139,7 +139,7 @@ class _CalculadoraPageState extends State<CalculadoraPage> {
                                   decoration: BoxDecoration(
                                     color: _pressedButton == i * 3 + j + 1
                                         ? Colors.green[300]
-                                        : Colors.blue,
+                                        : const Color.fromARGB(255, 16, 116, 199),
                                     borderRadius: _pressedButton == i * 3 + j + 1
                                         ? BorderRadius.circular(30) // Circular
                                         : BorderRadius.circular(10), // Rounded square
@@ -161,9 +161,12 @@ class _CalculadoraPageState extends State<CalculadoraPage> {
                         ],
                         
                       ),
+                      
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
+
+                        //Subtração
                         Padding(
                           padding: EdgeInsets.all(20),
                           child: FloatingActionButton(
@@ -172,6 +175,8 @@ class _CalculadoraPageState extends State<CalculadoraPage> {
                             child: const Icon(Icons.horizontal_rule),
                           ),
                         ),
+
+                        //NÚMERO 0
                         Padding(
                           padding: EdgeInsets.all(20),
                           child: FloatingActionButton(
@@ -180,6 +185,8 @@ class _CalculadoraPageState extends State<CalculadoraPage> {
                             child: Text('0')
                           ),
                         ),
+
+                        //SOMA
                         Padding(
                           padding: EdgeInsets.all(20),
                           child: FloatingActionButton(
@@ -193,6 +200,7 @@ class _CalculadoraPageState extends State<CalculadoraPage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
+                        //IGUAL
                         Padding(
                           padding: EdgeInsets.all(20),
                           child: FloatingActionButton(
@@ -201,6 +209,9 @@ class _CalculadoraPageState extends State<CalculadoraPage> {
                             child: Text('='),
                           ),
                           ),
+
+
+                        //LIMPAR
                         Padding(
                           padding: EdgeInsets.all(20),
                           child: FloatingActionButton(
