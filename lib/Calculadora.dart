@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'main.dart';
 import 'calculo.dart';
+import 'botao_calculadora.dart';
 
 class CalculadoraPage extends StatefulWidget {
   const CalculadoraPage({super.key, required this.title});
@@ -96,18 +97,39 @@ class _CalculadoraPageState extends State<CalculadoraPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Container(
-                  width: 300,
-                  height: 50,
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 800),
+                  width: _pressedButton != -1
+                    ? 310
+                    : 300,
+                  height: _pressedButton != -1
+                    ? 55
+                    : 50,
                   margin: EdgeInsets.fromLTRB(0, 20, 0, 10),
                   decoration: BoxDecoration(
-                    color: Colors.pinkAccent,
+                    color: _pressedButton != -1
+                    ? Colors.red[200]
+                    : Theme.of(context).colorScheme.inversePrimary,
+                    borderRadius: _pressedButton != -1
+                      ? BorderRadius.circular(4) // Circular
+                      : BorderRadius.circular(10),
                   ),
                   
-                  child: SingleChildScrollView(    
-                    dragStartBehavior: DragStartBehavior.down,
+                  child: Padding(
                     
-                    child: Text(_calculator.result, style: Theme.of(context).textTheme.headlineMedium),
+                    padding: const EdgeInsets.all(8.0),
+                    child: SingleChildScrollView(   
+                       
+                      dragStartBehavior: DragStartBehavior.down,
+                      reverse: true,
+                      scrollDirection: Axis.horizontal,
+                      keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+                      primary: true,
+                      
+                      child: Text(
+                        _calculator.result, 
+                        style: Theme.of(context).textTheme.headlineMedium),
+                    ),
                   ),
                 ),  
                 Container(
@@ -149,10 +171,10 @@ class _CalculadoraPageState extends State<CalculadoraPage> {
                                   decoration: BoxDecoration(
                                     color: _pressedButton == i * 3 + j + 1
                                         ? Colors.green[300]
-                                        : const Color.fromARGB(255, 16, 116, 199),
+                                        : Theme.of(context).colorScheme.primary,
                                     borderRadius: _pressedButton == i * 3 + j + 1
-                                        ? BorderRadius.circular(30) // Circular
-                                        : BorderRadius.circular(10), // Rounded square
+                                        ? BorderRadius.circular(30) 
+                                        : BorderRadius.circular(10), 
                                   ),
                                   child: Center(
                                     child: Text(
@@ -230,6 +252,31 @@ class _CalculadoraPageState extends State<CalculadoraPage> {
                             child: Text('CE'),
                           ),
                         ),
+
+                        //BOTÃO TESTE
+                        BotaoCalculadora(
+                          backGroundColor: Colors.amber,
+                          buttonText: 1,
+                          onTapDown: (_) => setState(() {
+                                  _pressedButton = 0;
+                                }),
+                          onTapUp: (_) {
+                            _handleNumberPress(1);                            
+                            Future.delayed(const Duration(milliseconds: 200), () { //TEMPO QUE FICA APERTADO
+                              if (mounted) {
+                                setState(() {
+                                  _pressedButton =-1;
+                                });
+                              }
+                            });
+                          },                         
+                          onTapCancel: () {
+                            setState(() {
+                              _pressedButton =-1;
+                            });
+                          },
+                          
+                        )
                       ]
                     ),
                   ],
