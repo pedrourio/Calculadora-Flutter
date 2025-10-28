@@ -34,6 +34,7 @@ class BotaoCalculadora extends StatelessWidget{
         duration: const Duration(milliseconds: 150),
         width: 60,
         height: 60,
+        
         decoration: BoxDecoration(
           color: buttonState == true
               ? Colors.green[300]

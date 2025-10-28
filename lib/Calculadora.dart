@@ -255,8 +255,11 @@ class _CalculadoraPageState extends State<CalculadoraPage> {
 
                         //BOTÃO TESTE
                         BotaoCalculadora(
-                          backGroundColor: Colors.amber,
+                          backGroundColor: Theme.of(context).colorScheme.primary,
                           buttonText: 1,
+                          buttonState: _pressedButton == -1
+                            ? true
+                            : false,
                           onTapDown: (_) => setState(() {
                                   _pressedButton = 0;
                                 }),
