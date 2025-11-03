@@ -26,32 +26,31 @@ class _CalculadoraPageState extends State<CalculadoraPage> {
   final Calculo _calculator = Calculo();
   int _pressedButton = 0;
 
-  void _handleNumberPress(int number){
-    setState((){
+  void _handleNumberPress(int number) {
+    setState(() {
       _calculator.changeResult(number);
-      
     });
   }
 
-  void _handleMinus(){
+  void _handleMinus() {
     setState(() {
       _calculator.minus();
     });
   }
 
-  void _handlePlus(){
+  void _handlePlus() {
     setState(() {
       _calculator.plus();
     });
   }
 
-  void _handleEquals(){
+  void _handleEquals() {
     setState(() {
       _calculator.calculateOperation();
     });
   }
 
-  void _handleClear(){
+  void _handleClear() {
     setState(() {
       _calculator.clearResult();
     });
@@ -59,7 +58,6 @@ class _CalculadoraPageState extends State<CalculadoraPage> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -70,17 +68,12 @@ class _CalculadoraPageState extends State<CalculadoraPage> {
       body: Center(
         
         child: Container(
-          width: 400,
+          width: 500,
           margin: EdgeInsets.all(30),
           decoration: BoxDecoration(
-            
-            color: Colors.blue[100], 
-            borderRadius: BorderRadius.circular(10), 
-            border: Border.all(
-             
-              color: Colors.blue,
-              width: 2,
-            ),
+            color: Theme.of(context).colorScheme.surface,
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(color: Colors.amber, width: 2),
             boxShadow: [
               // sombra
               BoxShadow(
@@ -94,202 +87,284 @@ class _CalculadoraPageState extends State<CalculadoraPage> {
 
           child: SingleChildScrollView(
             scrollDirection: Axis.vertical,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+            child: Stack(
+            
+              alignment: Alignment.topCenter,
+              clipBehavior: Clip.none,
               children: <Widget>[
                 AnimatedContainer(
                   duration: const Duration(milliseconds: 800),
-                  width: _pressedButton != -1
-                    ? 310
+                  width: _pressedButton != -1 
+                    ? 310 
                     : 300,
-                  height: _pressedButton != -1
-                    ? 55
+                  height: _pressedButton != -1 
+                    ? 55 
                     : 50,
                   margin: EdgeInsets.fromLTRB(0, 20, 0, 10),
                   decoration: BoxDecoration(
                     color: _pressedButton != -1
-                    ? Colors.red[200]
-                    : Theme.of(context).colorScheme.inversePrimary,
+                        ? Colors.red[200]
+                        : Theme.of(context).colorScheme.inversePrimary,
                     borderRadius: _pressedButton != -1
-                      ? BorderRadius.circular(4) // Circular
-                      : BorderRadius.circular(10),
+                        ? BorderRadius.circular(4) // Circular
+                        : BorderRadius.circular(10),
                   ),
-                  
+
                   child: Padding(
-                    
                     padding: const EdgeInsets.all(8.0),
-                    child: SingleChildScrollView(   
-                       
+                    child: SingleChildScrollView(
                       dragStartBehavior: DragStartBehavior.down,
                       reverse: true,
                       scrollDirection: Axis.horizontal,
-                      keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+                      keyboardDismissBehavior:
+                          ScrollViewKeyboardDismissBehavior.onDrag,
                       primary: true,
-                      
+
                       child: Text(
-                        _calculator.result, 
-                        style: Theme.of(context).textTheme.headlineMedium),
+                        _calculator.result,
+                        style: Theme.of(context).textTheme.headlineMedium,
+                      ),
                     ),
                   ),
-                ),  
+                ),
                 Container(
                   padding: EdgeInsets.all(20),
-                  child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    for (int i = 0; i < 3; i++)
-                      Row(  
+                  margin: EdgeInsets.only(top: 80), // Espaço adicional no topo
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      for (int i = 0; i < 3; i++)
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            for (int j = 0; j < 3; j++)
+                              Padding(
+                                padding: const EdgeInsets.all(10),
+                                child: BotaoCalculadora(
+                                  backGroundColor: Theme.of(
+                                    context,
+                                  ).colorScheme.primary,
+                                  buttonText: '${(i * 3 + j + 1)}',
+                                  buttonState: _pressedButton == i * 3 + j + 1
+                                      ? true
+                                      : false,
+                                  onTapDown: (_) => setState(() {
+                                    _pressedButton = (i * 3 + j + 1);
+                                  }),
+                                  onTapUp: (_) {
+                                    _handleNumberPress(i * 3 + j + 1);
+                                    Future.delayed(
+                                      const Duration(milliseconds: 200),
+                                      () {
+                                        //TEMPO QUE FICA APERTADO
+                                        if (mounted) {
+                                          setState(() {
+                                            _pressedButton = -1;
+                                          });
+                                        }
+                                      },
+                                    );
+                                  },
+                                  onTapCancel: () {
+                                    setState(() {
+                                      _pressedButton = -1;
+                                    });
+                                  },
+                                ),
+                              ),
+                          ],
+                        ),
+
+                      Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          for (int j = 0; j < 3; j++)
-                            Padding(
-                              padding: const EdgeInsets.all(10),
-                              child: GestureDetector(
-                                onTapDown: (_) => setState(() {
-                                  _pressedButton = i * 3 + j + 1;
-                                }),
-                                onTapUp: (_) {
-                                  _handleNumberPress(i * 3 + j + 1);
-                                  Future.delayed(const Duration(milliseconds: 200), () { //TEMPO QUE FICA APERTADO
+                          //Subtração
+                          Padding(
+                            padding: EdgeInsets.all(10),
+                            child: BotaoCalculadora(
+                              backGroundColor: Theme.of(
+                                context,
+                              ).colorScheme.primary,
+                              buttonText: "-",
+                              buttonState: _pressedButton == 0 ? true : false,
+                              onTapDown: (_) => setState(() {
+                                _pressedButton = 0;
+                              }),
+                              onTapUp: (_) {
+                                _handleMinus();
+                                Future.delayed(
+                                  const Duration(milliseconds: 200),
+                                  () {
+                                    //TEMPO QUE FICA APERTADO
                                     if (mounted) {
                                       setState(() {
                                         _pressedButton = -1;
                                       });
                                     }
-                                  });
-                                },
-                                
-                                onTapCancel: () {
-                                  setState(() {
-                                    _pressedButton = -1;
-                                  });
-                                },
-                                child: AnimatedContainer(
-                                  duration: const Duration(milliseconds: 150), //TEMPO QUE DEMORA PARA FAZER ANIMAÇÃO
-                                  width: 60,
-                                  height: 60,
-                                  decoration: BoxDecoration(
-                                    color: _pressedButton == i * 3 + j + 1
-                                        ? Colors.green[300]
-                                        : Theme.of(context).colorScheme.primary,
-                                    borderRadius: _pressedButton == i * 3 + j + 1
-                                        ? BorderRadius.circular(30) 
-                                        : BorderRadius.circular(10), 
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      '${i * 3 + j + 1}',
-                                      style: const TextStyle(
-                                        fontSize: 24,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                                                                                   
-                        ],
-                        
-                      ),
-                      
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-
-                        //Subtração
-                        Padding(
-                          padding: EdgeInsets.all(20),
-                          child: FloatingActionButton(
-                            onPressed: _handleMinus,
-                            tooltip: 'Subtrair',
-                            child: const Icon(Icons.horizontal_rule),
-                          ),
-                        ),
-
-                        //NÚMERO 0
-                        Padding(
-                          padding: EdgeInsets.all(20),
-                          child: FloatingActionButton(
-                            onPressed: ()=> _handleNumberPress(0),
-                            tooltip: '0',
-                            child: Text('0')
-                          ),
-                        ),
-
-                        //SOMA
-                        Padding(
-                          padding: EdgeInsets.all(20),
-                          child: FloatingActionButton(
-                            onPressed: ()=> _handlePlus(),
-                            tooltip: 'Somar',
-                            child: const Icon(Icons.add),
-                          ),
-                        ),
-                      ]
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        //IGUAL
-                        Padding(
-                          padding: EdgeInsets.all(20),
-                          child: FloatingActionButton(
-                            onPressed: _handleEquals,
-                            tooltip: 'Igual',
-                            child: Text('='),
-                          ),
-                          ),
-
-
-                        //LIMPAR
-                        Padding(
-                          padding: EdgeInsets.all(20),
-                          child: FloatingActionButton(
-                            onPressed: _handleClear,
-                            tooltip: 'Limpar',
-                            child: Text('CE'),
-                          ),
-                        ),
-
-                        //BOTÃO TESTE
-                        BotaoCalculadora(
-                          backGroundColor: Theme.of(context).colorScheme.primary,
-                          buttonText: 1,
-                          buttonState: _pressedButton == -1
-                            ? true
-                            : false,
-                          onTapDown: (_) => setState(() {
-                                  _pressedButton = 0;
-                                }),
-                          onTapUp: (_) {
-                            _handleNumberPress(1);                            
-                            Future.delayed(const Duration(milliseconds: 200), () { //TEMPO QUE FICA APERTADO
-                              if (mounted) {
+                                  },
+                                );
+                              },
+                              onTapCancel: () {
                                 setState(() {
-                                  _pressedButton =-1;
+                                  _pressedButton = -1;
                                 });
-                              }
-                            });
-                          },                         
-                          onTapCancel: () {
-                            setState(() {
-                              _pressedButton =-1;
-                            });
-                          },
+                              },
+                            ),
+                          ),
+
+                          //NÚMERO 0
+                          Padding(
+                            padding: EdgeInsets.all(10),
+                            child: BotaoCalculadora(
+                              backGroundColor: Theme.of(
+                                context,
+                              ).colorScheme.primary,
+                              buttonText: '${0}',
+                              buttonState: _pressedButton == 0 ? true : false,
+                              onTapDown: (_) => setState(() {
+                                _pressedButton = 0;
+                              }),
+                              onTapUp: (_) {
+                                _handleNumberPress(0);
+                                Future.delayed(
+                                  const Duration(milliseconds: 200),
+                                  () {
+                                    //TEMPO QUE FICA APERTADO
+                                    if (mounted) {
+                                      setState(() {
+                                        _pressedButton = -1;
+                                      });
+                                    }
+                                  },
+                                );
+                              },
+                              onTapCancel: () {
+                                setState(() {
+                                  _pressedButton = -1;
+                                });
+                              },
+                            ),
+                          ),
+
+                          //SOMA
+                          Padding(
+                            padding: EdgeInsets.all(10),
+                            child: BotaoCalculadora(
+                              backGroundColor: Theme.of(
+                                context,
+                              ).colorScheme.primary,
+                              buttonText: "+",
+                              buttonState: _pressedButton == 0 ? true : false,
+                              onTapDown: (_) => setState(() {
+                                _pressedButton = 0;
+                              }),
+                              onTapUp: (_) {
+                                _handlePlus();
+                                Future.delayed(
+                                  const Duration(milliseconds: 200),
+                                  () {
+                                    //TEMPO QUE FICA APERTADO
+                                    if (mounted) {
+                                      setState(() {
+                                        _pressedButton = -1;
+                                      });
+                                    }
+                                  },
+                                );
+                              },
+                              onTapCancel: () {
+                                setState(() {
+                                  _pressedButton = -1;
+                                });
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          //IGUAL
+                          Padding(
+                            padding: EdgeInsets.all(10),
+                            child: BotaoCalculadora(
+                              backGroundColor: Theme.of(
+                                context,
+                              ).colorScheme.primary,
+                              buttonText: "=",
+                              buttonState: _pressedButton == 0 ? true : false,
+                              onTapDown: (_) => setState(() {
+                                _pressedButton = 0;
+                              }),
+                              onTapUp: (_) {
+                                _handleEquals();
+                                Future.delayed(
+                                  const Duration(milliseconds: 200),
+                                  () {
+                                    //TEMPO QUE FICA APERTADO
+                                    if (mounted) {
+                                      setState(() {
+                                        _pressedButton = -1;
+                                      });
+                                    }
+                                  },
+                                );
+                              },
+                              onTapCancel: () {
+                                setState(() {
+                                  _pressedButton = -1;
+                                });
+                              },
+                            ),
+                          ),
+
+                          //LIMPAR
+                          Padding(
+                            padding: EdgeInsets.all(10),
+                            child:BotaoCalculadora(
+                              backGroundColor: Theme.of(
+                                context,
+                              ).colorScheme.primary,
+                              buttonText: "CE",
+                              buttonState: _pressedButton == 0 ? true : false,
+                              onTapDown: (_) => setState(() {
+                                _pressedButton = 0;
+                              }),
+                              onTapUp: (_) {
+                                _handleClear();
+                                Future.delayed(
+                                  const Duration(milliseconds: 200),
+                                  () {
+                                    //TEMPO QUE FICA APERTADO
+                                    if (mounted) {
+                                      setState(() {
+                                        _pressedButton = -1;
+                                      });
+                                    }
+                                  },
+                                );
+                              },
+                              onTapCancel: () {
+                                setState(() {
+                                  _pressedButton = -1;
+                                });
+                              },
+                            ),
+                          ),
+
+                          //BOTÃO TESTE
                           
-                        )
-                      ]
-                    ),
-                  ],
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
-    ),
+      
     );
   }
 }

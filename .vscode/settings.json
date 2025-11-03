@@ -1,3 +1,5 @@
 {
-    "cmake.sourceDirectory": "/workspaces/Calculadora-Basica/linux/flutter"
+    "cmake.sourceDirectory": "/workspaces/Calculadora-Basica/linux/flutter",
+    "python-envs.defaultEnvManager": "ms-python.python:system",
+    "python-envs.pythonProjects": []
 }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'main.dart';
 
 class BotaoCalculadora extends StatelessWidget{
   final Color? backGroundColor;
@@ -7,8 +6,9 @@ class BotaoCalculadora extends StatelessWidget{
   final GestureTapUpCallback? onTapUp;
   final GestureTapCancelCallback? onTapCancel;
   final bool? buttonState;
-  final int? buttonText;
+  final String? buttonText;
   final Icon? buttonIcon;
+  
 
   const BotaoCalculadora({
     super.key,
