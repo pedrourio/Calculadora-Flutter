@@ -35,12 +35,18 @@ class MainLayout extends StatefulWidget {
 }
 
 class _MainLayoutState extends State<MainLayout> {
+  int _selectedIndex = 0;
+
+  final List<Widget> _pages = [
+    CalculadoraPage(title: "Angry Calc >:("),
+    Center(child: Text('Dashboard')),
+  ];
   
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-    body: CalculadoraPage(title: "Angry Calc >:("),
-    bottomNavigationBar: BottomNavigationBar(
+      body: _pages[_selectedIndex],
+      bottomNavigationBar: BottomNavigationBar(
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -49,12 +55,16 @@ class _MainLayoutState extends State<MainLayout> {
           BottomNavigationBarItem(
             icon: Icon(Icons.window),
             label: 'Dashboard',
-            
           ),
         ],
-        backgroundColor: Colors.amber,
+        currentIndex: _selectedIndex,
+        onTap: (index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+        },
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       ),
     );
-    
   }
 }
