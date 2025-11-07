@@ -4,23 +4,27 @@ import 'Calculadora.dart';
 void main() {
   runApp(const MyApp());
 }
-
+int _mainTheme = 0;
 class MyApp extends StatelessWidget {
+  
   const MyApp({super.key});
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    
     return MaterialApp(
 
-
-      title: 'Calculadora em Flutter',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
+        colorScheme: _mainTheme == 0 
+        ? ColorScheme.fromSeed(seedColor: Colors.green)
+        : ColorScheme.fromSeed(seedColor: Colors.purple, surface: Colors.grey, ),
         useMaterial3: true,
         
       ),
-      home: const MainLayout(title: 'Calc1!',),
+      title: 'Calculadora em Flutter',
+      
+      home: const MainLayout(title: 'Calc1!'),
     );
   }
 }
@@ -35,7 +39,15 @@ class MainLayout extends StatefulWidget {
 }
 
 class _MainLayoutState extends State<MainLayout> {
+  void handleTheme(){
+    setState(() {
+      _mainTheme = _mainTheme == 0 ? 1 : 0;
+    });
+  }
+  
   int _selectedIndex = 0;
+  
+
 
   final List<Widget> _pages = [
     CalculadoraPage(title: "Angry Calc >:("),
@@ -45,7 +57,26 @@ class _MainLayoutState extends State<MainLayout> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _pages[_selectedIndex],
+      
+        
+      
+      body: Stack(
+        alignment: Alignment.topCenter,
+        clipBehavior: Clip.none,
+        children: <Widget>[
+        FloatingActionButton(
+          onPressed: (){handleTheme();},
+          backgroundColor: Colors.deepPurple,
+          child: Text(
+            _mainTheme == 0 ? "1" : "0"
+          ),
+        ),
+        _pages[_selectedIndex],
+
+        ]
+      ),
+      
+      
       bottomNavigationBar: BottomNavigationBar(
         items: [
           BottomNavigationBarItem(
@@ -68,3 +99,28 @@ class _MainLayoutState extends State<MainLayout> {
     );
   }
 }
+
+  // O que precisa ser feito:
+
+  //  1. Converter MyApp de
+  //     StatelessWidget para
+  //     StatefulWidget.
+  //  2. Mover a variável _mainTheme a
+  //      lógica da função handleTheme
+  //     para dentro do estado do MyA.
+  //  3. Passar a função handleTheme
+  //     como um parâmetro para o widt
+  //      MainLayout, para que o botão
+  //     dentro dele possa chamar a
+  //     função que está no estado do
+  //     MyApp.
+
+  // Isso pode parecer um pouco
+  // complexo, mas é o jeito certo de
+  // lidar com estados que afetam o
+  // aplicativo inteiro em Flutter.
+
+  // Eu posso fazer essa alteração
+  // para você no arquivo
+  // lib/main.dart. Quer que eu
+  // prossiga?
